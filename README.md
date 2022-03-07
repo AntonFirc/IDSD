@@ -26,3 +26,35 @@ Test3:
 
 Eval:
 34/34 - 1s - loss: 0.6814 - accuracy: 0.8667
+
+python3 df_test.py -i for-rerec/mel -n mel_max_10 -r 0
+python3 df_test.py -i for-rerec/stft -n stft_max_10 -r 0
+python3 df_test.py -i for-rerec/cqt -n cqt_max_10 -r 0
+python3 df_test.py -i for-rerec/vqt -n vqt_max_10 -r 0
+python3 df_test.py -i for-rerec/iirt -n iirt_max_10 -r 0
+python3 df_test.py -i for-rerec/chroma -n chroma_max_10 -r 0
+python3 df_test.py -i for-rerec/mfcc -n mfcc_max_10 -r 0
+
+python3 df_test.py -i for-rerec/mel -n mel_max_20 -r 0
+python3 df_test.py -i for-rerec/stft -n stft_max_20 -r 0
+python3 df_test.py -i for-rerec/cqt -n cqt_max_20 -r 0
+python3 df_test.py -i for-rerec/vqt -n vqt_max_20 -r 0
+python3 df_test.py -i for-rerec/iirt -n iirt_max_20 -r 0
+python3 df_test.py -i for-rerec/chroma -n chroma_max_20 -r 0
+python3 df_test.py -i for-rerec/mfcc -n mfcc_max_20 -r 0
+
+python3 df_test.py -i for-rerec/mel -n mel_max_40 -r 0
+python3 df_test.py -i for-rerec/stft -n stft_max_40 -r 0
+python3 df_test.py -i for-rerec/cqt -n cqt_max_40 -r 0
+python3 df_test.py -i for-rerec/vqt -n vqt_max_40 -r 0
+python3 df_test.py -i for-rerec/iirt -n iirt_max_40 -r 0
+python3 df_test.py -i for-rerec/chroma -n chroma_max_40 -r 0
+python3 df_test.py -i for-rerec/mfcc -n mfcc_max_40 -r 0
+
+python3 df_test.py -i for-2-sec/mel -n mel_avg_10 -r 10
+
+python3 eval_model.py -i ./dataset/for-rerec -m _max_10
+python3 eval_model.py -i ./dataset/for-rerec -m _max_20
+python3 eval_model.py -i ./dataset/for-rerec -m _max_40
+
+python3 train_dataset.py -i for-2-sec/mel -n mel_avg_tot

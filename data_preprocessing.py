@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
-thread_cnt = 80
+thread_cnt = 96
+dataset_name = 'for-rerecorded'
 
 
 def create_dirtree_without_files(src, dst):
@@ -37,13 +38,13 @@ def create_dirtree_without_files(src, dst):
 
 
 def dirtree_preprocessing(cwd):
-    # create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'mel'))
-    create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'stft'))
-    create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'cqt'))
-    create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'vqt'))
-    create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'iirt'))
-    create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'mfcc'))
-    create_dirtree_without_files(os.path.join(cwd, 'for-2seconds'), os.path.join(cwd, 'chroma'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'mel'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'stft'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'cqt'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'vqt'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'iirt'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'mfcc'))
+    create_dirtree_without_files(os.path.join(cwd, dataset_name), os.path.join(cwd, 'chroma'))
 
 
 def mel(y, sr, filename):
@@ -55,7 +56,7 @@ def mel(y, sr, filename):
     fig.colorbar(img, ax=ax, format='%+2.0f dB')
     ax.set(title='Mel-frequency spectrogram')
 
-    out = filename.replace('for-2seconds', 'mel')
+    out = filename.replace(dataset_name, 'mel')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -71,7 +72,7 @@ def stft(y, filename):
     fig.colorbar(img, ax=ax, format="%+2.0f dB")
     ax.set_title('Power spectrogram')
 
-    out = filename.replace('for-2seconds', 'stft')
+    out = filename.replace(dataset_name, 'stft')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -87,7 +88,7 @@ def cqt(y, sr, filename):
     ax.set_title('Constant-Q power spectrum')
     fig.colorbar(img, ax=ax, format="%+2.0f dB")
 
-    out = filename.replace('for-2seconds', 'cqt')
+    out = filename.replace(dataset_name, 'cqt')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -103,7 +104,7 @@ def vqt(y, sr, filename):
     ax.set_title('Variable-Q power spectrum')
     fig.colorbar(img, ax=ax, format="%+2.0f dB")
 
-    out = filename.replace('for-2seconds', 'vqt')
+    out = filename.replace(dataset_name, 'vqt')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -119,7 +120,7 @@ def iirt(y, sr, filename):
     ax.set_title('Semitone spectrogram (iirt)')
     fig.colorbar(img, ax=ax, format="%+2.0f dB")
 
-    out = filename.replace('for-2seconds', 'iirt')
+    out = filename.replace(dataset_name, 'iirt')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -135,7 +136,7 @@ def mfcc(y, sr, filename):
     ax.set_title('MFCC')
     fig.colorbar(img, ax=ax)
 
-    out = filename.replace('for-2seconds', 'mfcc')
+    out = filename.replace(dataset_name, 'mfcc')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -150,7 +151,7 @@ def chroma(y, sr, filename):
     ax.set_title('Chroma')
     fig.colorbar(img, ax=ax)
 
-    out = filename.replace('for-2seconds', 'chroma')
+    out = filename.replace(dataset_name, 'chroma')
     out = "png".join(out.rsplit("wav", 1))
     plt.savefig(out)
     plt.close(out)
@@ -197,7 +198,7 @@ def processing(dirname):
 
 if __name__ == "__main__":
     cwd = os.getcwd()
-    dataset_path = cwd + "/dataset"
+    dataset_path = cwd + "/dataset/for-rerec"
     print("Creating directories for each spectrogram category...")
 
     try:
@@ -206,4 +207,4 @@ if __name__ == "__main__":
         print("WARNING: One or more directories already exists.")
 
     print("Creating spectrograms for each .wav file...")
-    processing("dataset/for-2seconds")
+    processing("dataset/for-rerec/for-rerecorded")
