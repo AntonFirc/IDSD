@@ -5,3 +5,4 @@ numpy==1.21.5
 tqdm~=4.62.3
 keras~=2.8.0
 keras-tcn
+audioread

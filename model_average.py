@@ -4,11 +4,11 @@ from tcn import TCN
 import tensorflow as tf
 
 
-def build_model(resume_training, run_name):
+def build_model(resume_training, model_path):
     batch_size, time_steps, input_dim = None, 640, 480
     input_shape = Input(shape=(time_steps, input_dim))
 
-    pool_size, strides = 2, 1
+    pool_size, strides = 10, 5
 
     # setting dropout for TCN layers?
     tower_1 = TCN(input_shape=(time_steps, input_dim), kernel_size=3, return_sequences=True, padding='causal',
@@ -35,8 +35,8 @@ def build_model(resume_training, run_name):
     model = Model(inputs=[input_shape], outputs=[out])
 
     if resume_training:
-        print("Resuming training for model: {0}".format('{0}.h5'.format(run_name)))
-        model.load_weights('models/{0}.h5'.format(run_name))
+        print("Resuming training for model: {0}".format('{0}.h5'.format(model_path)))
+        model.load_weights('{0}.h5'.format(model_path))
 
     loss_fce = tf.keras.losses.BinaryCrossentropy(from_logits=False)
 

@@ -7,9 +7,9 @@ import datetime
 from tqdm import tqdm
 import os
 import numpy as np
-from model_max import build_model
+from model_average import build_model
 
-test_cases = ['mel', 'stft', 'cqt', 'vqt', 'iirt', 'chroma', 'mfcc']
+test_cases = ['mel', 'stft', 'cqt', 'vqt', 'iirt']
 
 
 def load_image(image_path):
@@ -49,7 +49,7 @@ for opt, arg in opts:
         model_suffix = arg
 
 resume_training = True
-thread_cnt = 32
+thread_cnt = 96
 real_image_data, fake_image_data = [], []
 
 print("TensorFlow version:", tf.__version__)
@@ -60,9 +60,12 @@ f.write("case: genuine accept ; deepfake reject ; deepfake accept ; genuine reje
 
 for case in test_cases:
 
+    model_name = "./models/{0}{1}".format(case, model_suffix)
+    model, batch_size = build_model(True, model_name)
+
     real_image_data = []
-    data_eval_real = '{0}/{1}/validation/real'.format(data_dir, case)
-    data_eval_fake = '{0}/{1}/validation/fake'.format(data_dir, case)
+    data_eval_real = '{0}/{1}/real'.format(data_dir, case)
+    data_eval_fake = '{0}/{1}/fake'.format(data_dir, case)
 
     is_real_data = True
 
@@ -93,10 +96,10 @@ for case in test_cases:
             tqdm(
                 pool.imap(
                     load_image,
-                    fake_image_data
+                    fake_image_data[30000:]
                 ),
                 'Eval fake',
-                len(fake_image_data),
+                len(fake_image_data[30000:]),
                 unit="images"
             )
         )
@@ -105,8 +108,7 @@ for case in test_cases:
     x_eval, y_eval = np.array(x_eval), np.array(y_eval)
     x_eval = x_eval / 255.0
 
-    model_name = "{0}{1}".format(case, model_suffix)
-    model, batch_size = build_model(True, model_name)
+    tf.data.Dataset.from_tensor_slices(x_eval)
 
     y_pred = model.predict(x_eval)
 
@@ -138,5 +140,5 @@ for case in test_cases:
     f.write("{0}: {1} ; {2} ; {3} ; {4}\n".format(case, true_accepts, true_rejects, false_accepts, false_rejects))
     x_eval, y_eval, y_pred = [], [], []
 
-f.write("total genuine/deepfake: {0} / {0}\n".format(len(real_image_data), len(fake_image_data)))
+f.write("total genuine/deepfake: {0} / {1}\n".format(len(real_image_data), len(fake_image_data)))
 f.close()

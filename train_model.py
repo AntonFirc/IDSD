@@ -10,11 +10,13 @@ data_dir = ''
 run_name = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 resume_training = False
 image_size = (640, 480)
+load_model_path = ''
+model_directory = './models'
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hri:n:")
+    opts, args = getopt.getopt(sys.argv[1:], "hri:n:l:m:")
 except getopt.GetoptError:
-    print('test.py -i <dataset_dir> -n <run_name> [ -r ] ')
+    print('test.py -i <dataset_dir> -n <run_name> [ -r ]')
     sys.exit(2)
 for opt, arg in opts:
     if opt == '-h':
@@ -24,14 +26,21 @@ for opt, arg in opts:
         data_dir = arg
     elif opt == '-n':
         run_name = arg
+    elif opt == '-m':
+        model_directory = arg
     elif opt == '-r':
         resume_training = True
+    elif opt == '-l':
+        load_model_path = arg
 
 
 print("TensorFlow version:", tf.__version__)
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-model, batch_size = build_model(resume_training, run_name)
+if not load_model_path:
+    load_model_path = "{0}/{1}".format(model_directory, run_name)
+
+model, batch_size = build_model(resume_training, "{0}/{1}".format(model_directory, load_model_path))
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
@@ -67,7 +76,7 @@ early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patie
 
 model.fit(train_ds, epochs=500,
           callbacks=[tensorboard_callback, early_stopping_callback],
-          shuffle=True, use_multiprocessing=True)
+          shuffle=True, use_multiprocessing=True, validation_data=test_ds)
 
-model.save_weights("models/{0}.h5".format(run_name))
+model.save_weights("{0}/{1}.h5".format(model_directory, run_name))
 model.evaluate(test_ds, verbose=2)
