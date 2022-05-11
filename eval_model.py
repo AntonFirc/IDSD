@@ -55,17 +55,20 @@ real_image_data, fake_image_data = [], []
 print("TensorFlow version:", tf.__version__)
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-f = open("evaL_result{0}_{1}.txt".format(model_suffix, now), "w")
+f = open("evaL_result{0}_{1}_{2}.txt".format(model_suffix, data_dir.split('/')[-1], now), "w")
 f.write("case: genuine accept ; deepfake reject ; deepfake accept ; genuine reject\n")
 
 for case in test_cases:
+
+    gen = open("genuine_scores_{0}_{1}{2}_{3}.txt".format(case, data_dir.split('/')[-1], model_suffix, now), "w")
+    fake = open("fake_scores_{0}_{1}{2}_{3}.txt".format(case, data_dir.split('/')[-1], model_suffix, now), "w")
 
     model_name = "./models/{0}{1}".format(case, model_suffix)
     model, batch_size = build_model(True, model_name)
 
     real_image_data = []
-    data_eval_real = '{0}/{1}/real'.format(data_dir, case)
-    data_eval_fake = '{0}/{1}/fake'.format(data_dir, case)
+    data_eval_real = '{0}/{1}/validation/real'.format(data_dir, case)
+    data_eval_fake = '{0}/{1}/validation/fake'.format(data_dir, case)
 
     is_real_data = True
 
@@ -96,10 +99,10 @@ for case in test_cases:
             tqdm(
                 pool.imap(
                     load_image,
-                    fake_image_data[30000:]
+                    fake_image_data
                 ),
                 'Eval fake',
-                len(fake_image_data[30000:]),
+                len(fake_image_data),
                 unit="images"
             )
         )
@@ -121,14 +124,17 @@ for case in test_cases:
     # 0 = deepfake data
 
     for i in tqdm(range(len(y_eval))):
+        # print(repr(y_pred[i][0]))
         # if deepfake
         if y_eval[i] == 0:
+            fake.write("%1.4f\n" % y_pred[i][0])
             if y_pred[i] < 0.5:
                 true_rejects += 1
             else:
                 false_accepts += 1
         # if real
         if y_eval[i] == 1:
+            gen.write("%1.4f\n" % y_pred[i][0])
             if y_pred[i] > 0.5:
                 true_accepts += 1
             else:
@@ -139,6 +145,9 @@ for case in test_cases:
 
     f.write("{0}: {1} ; {2} ; {3} ; {4}\n".format(case, true_accepts, true_rejects, false_accepts, false_rejects))
     x_eval, y_eval, y_pred = [], [], []
+
+    gen.close()
+    fake.close()
 
 f.write("total genuine/deepfake: {0} / {1}\n".format(len(real_image_data), len(fake_image_data)))
 f.close()
