@@ -5,7 +5,7 @@ import tensorflow as tf
 
 
 def build_model(resume_training, model_path):
-    batch_size, time_steps, input_dim = None, 640, 480
+    batch_size, time_steps, input_dim = None, 256, 126
     input_shape = Input(shape=(time_steps, input_dim))
 
     pool_size, strides = 10, 5
