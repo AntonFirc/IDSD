@@ -7,8 +7,8 @@
 
 module add anaconda3-2019.10
 module add ffmpeg
-module add cuda-10.1
-module add cudnn-7.6.4-cuda10.0
+module add cuda/cuda-11.2.0-intel-19.0.4-tn4edsz
+module add cudnn/cudnn-8.1.0.77-11.2-linux-x64-intel-19.0.4-wx22b5t
 
 source activate IDSD
 
