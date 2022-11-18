@@ -8,7 +8,7 @@ import librosa
 import numpy as np
 from tqdm import tqdm
 
-dir_type = 'training'
+dir_type = 'validation'
 data_root = Path(f'/Users/antonfirc/Documents/Skola/PHD/Tools/Dataset/FoR/for-2seconds/{dir_type}')
 rec_folders = ['real', 'fake']
 mels, stfts, cqts, vqts, iirts, mfccs, chromas = [], [], [], [], [], [], []

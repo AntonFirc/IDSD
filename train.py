@@ -46,8 +46,6 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 if not load_model_path:
     load_model_path = "{0}/{1}".format(model_directory, run_name)
 
-model = build_model(False, "{0}/{1}".format(model_directory, load_model_path), batch_size)
-
 data_train = np.load(train_path, allow_pickle=True, fix_imports=True)
 train_examples = data_train[:, 0].tolist()
 train_labels = data_train[:, 1].tolist()
@@ -97,6 +95,12 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram
 early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5)
 
 tf.config.run_functions_eagerly(True)
+
+model = build_model(False,
+                    "{0}/{1}".format(model_directory, load_model_path),
+                    batch_size=batch_size,
+                    time_steps=train_examples[0].shape[0],
+                    input_dim=train_examples[0].shape[1])
 
 model.fit(train_ds, epochs=500,
           callbacks=[tensorboard_callback, early_stopping_callback],

@@ -2,6 +2,8 @@
 
 Primarily work with Adan cluster - tested and optimized for it :)
 
+Clone repo: `git clone https://github.com/AntonFirc/IDSD.git -b spectrogram-generator`
+
 ## Interactive job
 
 Ask for computational node: 

@@ -7,8 +7,7 @@ from tcn import TCN
 import tensorflow as tf
 
 
-def build_model(resume_training, model_path, batch_size=None):
-    time_steps, input_dim = 256, 126
+def build_model(resume_training, model_path, batch_size=None, time_steps=256, input_dim=126):
     input_shape_tuple = (batch_size, time_steps, input_dim)
     input_shape = Input(batch_input_shape=input_shape_tuple)
 
