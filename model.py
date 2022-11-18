@@ -1,25 +1,29 @@
+from pathlib import Path
+
+import numpy as np
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras import Model
 from tcn import TCN
 import tensorflow as tf
 
 
-def build_model(resume_training, model_path):
-    batch_size, time_steps, input_dim = None, 256, 126
-    input_shape = Input(shape=(time_steps, input_dim))
+def build_model(resume_training, model_path, batch_size=None):
+    time_steps, input_dim = 256, 126
+    input_shape_tuple = (batch_size, time_steps, input_dim)
+    input_shape = Input(batch_input_shape=input_shape_tuple)
 
     pool_size, strides = 10, 5
 
     # setting dropout for TCN layers?
-    tower_1 = TCN(input_shape=(time_steps, input_dim), kernel_size=3, return_sequences=True, padding='causal',
+    tower_1 = TCN(input_shape=input_shape_tuple, kernel_size=3, return_sequences=True, padding='causal',
                   dropout_rate=0.2)(input_shape)
     tower_1 = tf.keras.layers.AveragePooling1D(pool_size=pool_size, strides=strides, padding='valid')(tower_1)
 
-    tower_2 = TCN(input_shape=(time_steps, input_dim), kernel_size=5, return_sequences=True, padding='causal',
+    tower_2 = TCN(input_shape=input_shape_tuple, kernel_size=5, return_sequences=True, padding='causal',
                   dropout_rate=0.2)(input_shape)
     tower_2 = tf.keras.layers.AveragePooling1D(pool_size=pool_size, strides=strides, padding='valid')(tower_2)
 
-    tower_3 = TCN(input_shape=(time_steps, input_dim), kernel_size=7, return_sequences=True, padding='causal',
+    tower_3 = TCN(input_shape=input_shape_tuple, kernel_size=7, return_sequences=True, padding='causal',
                   dropout_rate=0.2)(input_shape)
     tower_3 = tf.keras.layers.AveragePooling1D(pool_size=pool_size, strides=strides, padding='valid')(tower_3)
 
@@ -46,4 +50,29 @@ def build_model(resume_training, model_path):
 
     model.summary()
 
-    return model, batch_size
+    return model
+
+
+def eval_model(model, eval_data_path):
+    data_eval = np.load(eval_data_path, allow_pickle=True, fix_imports=True)
+    x_eval = np.array(data_eval[:, 0].tolist())
+    y_eval = data_eval[:, 1].tolist()
+
+    x_eval = x_eval / 255.0
+
+    preds = model.predict(x_eval)
+
+    gen_score_f_name = Path('score/for-2sec-mel-eval-genuine.txt')
+    df_score_f_name = Path('score/for-2sec-mel-eval-spoof.txt')
+
+    gen_score_f = open(gen_score_f_name, 'w')
+    df_score_f = open(df_score_f_name, 'w')
+
+    for i in range(len(preds)):
+        if y_eval[i] == 0:
+            df_score_f.write("%1.4f\n" % preds[i][0])
+        if y_eval[i] == 1:
+            gen_score_f.write("%1.4f\n" % preds[i][0])
+
+    gen_score_f.close()
+    df_score_f.close()

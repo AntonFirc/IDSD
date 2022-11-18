@@ -2,3 +2,9 @@
 .idea
 \dataset
 \graphs
+\models
+
+\processed_data
+\score
+
+*.h5
