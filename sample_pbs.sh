@@ -15,5 +15,5 @@ source activate IDSD
 # cd <path to IDSD root>, for example:
 cd /storage/brno2/home/deemax/IDSD
 
-python3 train_model.py -i dataset -l mel_avg_full_nopool -n mel_avg_pool
+python3 train.py -i processed_data/for_train_mel.npy -e processed_data/for_eval_mel.npy -t processed_data/for_test_mel.npy -n for-2sec-mel
 

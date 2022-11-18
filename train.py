@@ -9,23 +9,28 @@ import numpy as np
 
 data_dir = ''
 run_name = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-resume_training = False
-image_size = (256, 126)
-load_model_path = ''
 model_directory = './models'
 batch_size = 128
+load_model_path = None
+train_path = 'for_training_mel.npy'
+test_path = 'for_test_mel.npy'
+eval_path = 'for_eval_mel.npy'
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hri:n:l:m:")
+    opts, args = getopt.getopt(sys.argv[1:], "hri:e:t:n:l:m:")
 except getopt.GetoptError:
-    print('train.py -i <dataset_dir> -n <run_name> [ -r ]')
+    print('train.py -i <data_path> -n <run_name> [ -r ]')
     sys.exit(2)
 for opt, arg in opts:
     if opt == '-h':
         print('train.py -i <dataset_dir>')
         sys.exit()
     elif opt == '-i':
-        data_dir = arg
+        train_path = arg
+    elif opt == '-e':
+        eval_path = arg
+    elif opt == '-t':
+        test_path = arg
     elif opt == '-n':
         run_name = arg
     elif opt == '-m':
@@ -41,23 +46,23 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 if not load_model_path:
     load_model_path = "{0}/{1}".format(model_directory, run_name)
 
-model = build_model(resume_training, "{0}/{1}".format(model_directory, load_model_path), batch_size)
+model = build_model(False, "{0}/{1}".format(model_directory, load_model_path), batch_size)
 
-data_train = np.load('for_training_mel.npy', allow_pickle=True, fix_imports=True)
+data_train = np.load(train_path, allow_pickle=True, fix_imports=True)
 train_examples = data_train[:, 0].tolist()
 train_labels = data_train[:, 1].tolist()
 
 print("Train dataset balance:")
 print(np.unique(train_labels, return_counts=True))
 
-data_test = np.load('for_test_mel.npy', allow_pickle=True, fix_imports=True)
+data_test = np.load(test_path, allow_pickle=True, fix_imports=True)
 test_examples = data_test[:, 0].tolist()
 test_labels = data_test[:, 1].tolist()
 
 print("Test dataset balance:")
 print(np.unique(test_labels, return_counts=True))
 
-data_eval = np.load('for_eval_mel.npy', allow_pickle=True, fix_imports=True)
+data_eval = np.load(eval_path, allow_pickle=True, fix_imports=True)
 eval_examples = data_eval[:, 0].tolist()
 eval_labels = data_eval[:, 1].tolist()
 
@@ -100,4 +105,4 @@ model.fit(train_ds, epochs=500,
 model.save_weights("{0}/{1}.h5".format(model_directory, run_name))
 model.evaluate(eval_ds, verbose=2)
 
-eval_model(model, 'for_eval_mel.npy')
+eval_model(model, eval_path, run_name)

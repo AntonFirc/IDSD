@@ -39,8 +39,8 @@ def build_model(resume_training, model_path, batch_size=None):
     model = Model(inputs=[input_shape], outputs=[out])
 
     if resume_training:
-        print("Resuming training for model: {0}".format('{0}.h5'.format(model_path)))
-        model.load_weights('{0}.h5'.format(model_path))
+        print(f'Resuming model: {model_path}')
+        model.load_weights(f'{model_path}')
 
     loss_fce = tf.keras.losses.BinaryCrossentropy(from_logits=False)
 
@@ -53,7 +53,7 @@ def build_model(resume_training, model_path, batch_size=None):
     return model
 
 
-def eval_model(model, eval_data_path):
+def eval_model(model, eval_data_path, score_f_name):
     data_eval = np.load(eval_data_path, allow_pickle=True, fix_imports=True)
     x_eval = np.array(data_eval[:, 0].tolist())
     y_eval = data_eval[:, 1].tolist()
@@ -62,8 +62,8 @@ def eval_model(model, eval_data_path):
 
     preds = model.predict(x_eval)
 
-    gen_score_f_name = Path('score/for-2sec-mel-eval-genuine.txt')
-    df_score_f_name = Path('score/for-2sec-mel-eval-spoof.txt')
+    gen_score_f_name = Path(f'score/{score_f_name}-eval-genuine.txt')
+    df_score_f_name = Path(f'score/{score_f_name}-eval-spoof.txt')
 
     gen_score_f = open(gen_score_f_name, 'w')
     df_score_f = open(df_score_f_name, 'w')
