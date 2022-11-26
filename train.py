@@ -12,9 +12,9 @@ run_name = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 model_directory = './models'
 batch_size = 128
 load_model_path = None
-train_path = 'for_training_mel.npy'
-test_path = 'for_test_mel.npy'
-eval_path = 'for_eval_mel.npy'
+train_path = '/processed_data/old/ASVSpoof_dev_mel.npy'
+test_path = '/processed_data/old/ASVSpoof_dev_mel.npy'
+eval_path = '/processed_data/old/ASVSpoof_dev_mel.npy'
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "hri:e:t:n:l:m:")
@@ -96,6 +96,9 @@ early_stopping_callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patie
 
 tf.config.run_functions_eagerly(True)
 
+class_weight = {0: 1.,
+                1: 9.}
+
 model = build_model(False,
                     "{0}/{1}".format(model_directory, load_model_path),
                     batch_size=batch_size,
@@ -103,7 +106,7 @@ model = build_model(False,
                     input_dim=train_examples[0].shape[1])
 
 model.fit(train_ds, epochs=500,
-          callbacks=[tensorboard_callback, early_stopping_callback],
+          callbacks=[tensorboard_callback, early_stopping_callback], class_weight=class_weight,
           shuffle=True, use_multiprocessing=True, validation_data=test_ds)
 
 model.save_weights("{0}/{1}.h5".format(model_directory, run_name))
