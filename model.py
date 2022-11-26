@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 import numpy as np
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras import Model
@@ -63,6 +63,9 @@ def eval_model(model, eval_data_path, score_f_name):
 
     gen_score_f_name = Path(f'score/{score_f_name}-eval-genuine.txt')
     df_score_f_name = Path(f'score/{score_f_name}-eval-spoof.txt')
+
+    if not os.path.exists('./score'):
+        os.makedirs('./score')
 
     gen_score_f = open(gen_score_f_name, 'w')
     df_score_f = open(df_score_f_name, 'w')

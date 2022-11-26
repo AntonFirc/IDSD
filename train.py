@@ -1,3 +1,4 @@
+import os
 import getopt
 import sys
 import tensorflow as tf
@@ -42,6 +43,10 @@ for opt, arg in opts:
 
 print("TensorFlow version:", tf.__version__)
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
+if not os.path.exists(model_directory):
+    os.makedirs(model_directory)
+    print("Model directory created at ", model_directory)
 
 if not load_model_path:
     load_model_path = "{0}/{1}".format(model_directory, run_name)
