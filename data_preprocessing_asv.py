@@ -32,16 +32,16 @@ def process_recording(f_name, label):
         y = y_a[32000*j:32000*(j+1)]
 
         # Mel-spectrogram
-        mel_s = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=256, n_fft=1024, hop_length=256)
+        # mel_s = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=256, n_fft=1024, hop_length=256)
+        #
+        # mel_p = np.array([np.asarray(mel_s), label], dtype=object)
+        # mels.append(mel_p)
 
-        mel_p = np.array([np.asarray(mel_s), label], dtype=object)
-        mels.append(mel_p)
-
-        # STFT-spectrogram
-        s = np.abs(librosa.stft(y, n_fft=1024, hop_length=256))
-
-        stft_p = np.array([np.asarray(s), label], dtype=object)
-        stfts.append(stft_p)
+        # # STFT-spectrogram
+        # s = np.abs(librosa.stft(y, n_fft=1024, hop_length=256))
+        #
+        # stft_p = np.array([np.asarray(s), label], dtype=object)
+        # stfts.append(stft_p)
 
         # CQT-spectorgram
         c = np.abs(librosa.cqt(y, sr=sr, hop_length=256))
@@ -55,31 +55,32 @@ def process_recording(f_name, label):
         vqt_p = np.array([np.asarray(v), label], dtype=object)
         vqts.append(vqt_p)
 
-        # IIRT-spectrogram
-        i = np.abs(librosa.iirt(y, sr=sr, win_length=1024, hop_length=256))
+        # # IIRT-spectrogram
+        # i = np.abs(librosa.iirt(y, sr=sr, win_length=1024, hop_length=256))
+        #
+        # iirt_p = np.array([np.asarray(i), label], dtype=object)
+        # iirts.append(iirt_p)
+        #
+        # # MFCC-spectrogram
+        # mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
+        #
+        # mfcc_p = np.array([np.asarray(mfcc), label], dtype=object)
+        # mfccs.append(mfcc_p)
+        #
+        # # Chroma-spectrogram
+        # cro = librosa.feature.chroma_stft(y=y, sr=sr, n_fft=1024, hop_length=256)
+        #
+        # chroma_p = np.array([np.asarray(cro), label], dtype=object)
+        # chromas.append(chroma_p)
 
-        iirt_p = np.array([np.asarray(i), label], dtype=object)
-        iirts.append(iirt_p)
 
-        # MFCC-spectrogram
-        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
-
-        mfcc_p = np.array([np.asarray(mfcc), label], dtype=object)
-        mfccs.append(mfcc_p)
-
-        # Chroma-spectrogram
-        cro = librosa.feature.chroma_stft(y=y, sr=sr, n_fft=1024, hop_length=256)
-
-        chroma_p = np.array([np.asarray(cro), label], dtype=object)
-        chromas.append(chroma_p)
-
-
-data_types = ['train']
-data_root = Path('/storage/brno2/home/deemax/brno6/datasets/LA')
+data_types = ['eval']
+data_root = Path(f'/Users/antonfirc/Documents/Skola/PHD/Publikace/2022/ESORICS-Nine_simple_tricks/IDSD/dataset/LA')
+# data_root = Path('/storage/brno2/home/deemax/brno6/datasets/LA')
 
 for data_type in data_types:
     protocol_path = data_root.joinpath('ASVspoof2019_LA_cm_protocols').joinpath(
-        f'ASVspoof2019.LA.cm.{data_type}.trn.txt')
+        f'ASVspoof2019.LA.cm.{data_type}.trl.txt')
     rec_path = data_root.joinpath(f'ASVspoof2019_LA_{data_type}').joinpath('flac')
 
     proto = open(protocol_path, 'r')
@@ -110,11 +111,11 @@ for data_type in data_types:
             )
         )
 
-    mels_np = np.array(mels)
-    np.save(f'processed_data/ASVSpoof_{data_type}_mel.npy', mels_np, allow_pickle=True, fix_imports=True)
+    # mels_np = np.array(mels)
+    # np.save(f'processed_data/ASVSpoof_{data_type}_mel.npy', mels_np, allow_pickle=True, fix_imports=True)
 
-    stfts_np = np.array(stfts)
-    np.save(f'processed_data/ASVSpoof_{data_type}_stft.npy', stfts_np, allow_pickle=True, fix_imports=True)
+    # stfts_np = np.array(stfts)
+    # np.save(f'processed_data/ASVSpoof_{data_type}_stft.npy', stfts_np, allow_pickle=True, fix_imports=True)
 
     cqts_np = np.array(cqts)
     np.save(f'processed_data/ASVSpoof_{data_type}_cqt.npy', cqts_np, allow_pickle=True, fix_imports=True)
@@ -122,11 +123,11 @@ for data_type in data_types:
     vqts_np = np.array(vqts)
     np.save(f'processed_data/ASVSpoof_{data_type}_vqt.npy', vqts_np, allow_pickle=True, fix_imports=True)
 
-    iirts_np = np.array(iirts)
-    np.save(f'processed_data/ASVSpoof_{data_type}_iirt.npy', iirts_np, allow_pickle=True, fix_imports=True)
-
-    mfccs_np = np.array(mfccs)
-    np.save(f'processed_data/ASVSpoof_{data_type}_mfcc.npy', mfccs_np, allow_pickle=True, fix_imports=True)
-
-    chromas_np = np.array(chromas)
-    np.save(f'processed_data/ASVSpoof_{data_type}_chroma.npy', chromas_np, allow_pickle=True, fix_imports=True)
+    # iirts_np = np.array(iirts)
+    # np.save(f'processed_data/ASVSpoof_{data_type}_iirt.npy', iirts_np, allow_pickle=True, fix_imports=True)
+    #
+    # mfccs_np = np.array(mfccs)
+    # np.save(f'processed_data/ASVSpoof_{data_type}_mfcc.npy', mfccs_np, allow_pickle=True, fix_imports=True)
+    #
+    # chromas_np = np.array(chromas)
+    # np.save(f'processed_data/ASVSpoof_{data_type}_chroma.npy', chromas_np, allow_pickle=True, fix_imports=True)

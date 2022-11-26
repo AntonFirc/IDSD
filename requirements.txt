@@ -2,6 +2,6 @@ tensorflow-gpu==2.8.0
 librosa==0.9.1
 numpy
 tqdm~=4.62.3
-keras~=2.8.0
+keras
 keras-tcn
 audioread
