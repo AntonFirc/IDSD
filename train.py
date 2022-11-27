@@ -9,7 +9,7 @@ import numpy as np
 
 data_dir = ''
 run_name = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-model_directory = './models'
+model_directory = '../models'
 batch_size = 128
 load_model_path = None
 train_path = '/processed_data/old/ASVSpoof_dev_mel.npy'

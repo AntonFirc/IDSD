@@ -11,6 +11,7 @@ from tqdm import tqdm
 dir_type = 'validation'
 data_root = Path(f'/Users/antonfirc/Documents/Skola/PHD/Tools/Dataset/FoR/for-2seconds/{dir_type}')
 rec_folders = ['real', 'fake']
+processed_data = 'data2'
 mels, stfts, cqts, vqts, iirts, mfccs, chromas = [], [], [], [], [], [], []
 
 
@@ -65,8 +66,8 @@ def process_recording(f_name, label):
     chromas.append(chroma_p)
 
 
-if not os.path.exists('processed_data'):
-    os.makedirs('processed_data')
+if not os.path.exists(processed_data):
+    os.makedirs(processed_data)
 
 for type in rec_folders:
     type_path = data_root.joinpath(type)
@@ -97,22 +98,22 @@ for type in rec_folders:
         )
 
 mels_np = np.array(mels)
-np.save(f'processed_data/for_{dir_type}_mel.npy', mels_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_mel.npy', mels_np, allow_pickle=True, fix_imports=True)
 
 stfts_np = np.array(stfts)
-np.save(f'processed_data/for_{dir_type}_stft.npy', stfts_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_stft.npy', stfts_np, allow_pickle=True, fix_imports=True)
 
 cqts_np = np.array(cqts)
-np.save(f'processed_data/for_{dir_type}_cqt.npy', cqts_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_cqt.npy', cqts_np, allow_pickle=True, fix_imports=True)
 
 vqts_np = np.array(vqts)
-np.save(f'processed_data/for_{dir_type}_vqt.npy', vqts_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_vqt.npy', vqts_np, allow_pickle=True, fix_imports=True)
 
 iirts_np = np.array(iirts)
-np.save(f'processed_data/for_{dir_type}_iirt.npy', iirts_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_iirt.npy', iirts_np, allow_pickle=True, fix_imports=True)
 
 mfccs_np = np.array(mfccs)
-np.save(f'processed_data/for_{dir_type}_mfcc.npy', mfccs_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_mfcc.npy', mfccs_np, allow_pickle=True, fix_imports=True)
 
 chromas_np = np.array(chromas)
-np.save(f'processed_data/for_{dir_type}_chroma.npy', chromas_np, allow_pickle=True, fix_imports=True)
+np.save(f'data2/for_{dir_type}_chroma.npy', chromas_np, allow_pickle=True, fix_imports=True)
