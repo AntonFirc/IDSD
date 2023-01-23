@@ -7,6 +7,8 @@ from tcn import TCN
 import tensorflow as tf
 
 
+# The model architecture is dependent on used feature:
+#  - to simplify, size is provided upon creation (extracted shape from training data)
 def build_model(resume_training, model_path, batch_size=None, time_steps=256, input_dim=126):
     input_shape_tuple = (batch_size, time_steps, input_dim)
     input_shape = Input(batch_input_shape=input_shape_tuple)
@@ -52,6 +54,7 @@ def build_model(resume_training, model_path, batch_size=None, time_steps=256, in
     return model
 
 
+# Not used anymore, preserved for compatibility reasons
 def eval_model(model, eval_data_path, score_f_name):
     data_eval = np.load(eval_data_path, allow_pickle=True, fix_imports=True)
     x_eval = np.array(data_eval[:, 0].tolist())

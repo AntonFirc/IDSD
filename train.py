@@ -5,7 +5,14 @@ import datetime
 from model import build_model, eval_model
 import numpy as np
 
+#
+# Beware! outdated and not used, preserved just in case ... use at own risk
+# Use train_generator.py instead!
+#
+
 # python3 -m tensorboard.main --logdir logs/fit
+
+# python3 train.py -i processed_data/for_rerec_training_vqt.npy,processed_data/for_training_vqt.npy -e processed_data/for_rerec_validation_vqt.npy,processed_data/for_validation_vqt.npy -t processed_data/for_rerec_testing_vqt.npy,processed_data/for_testing_vqt.npy -n WF-cqt
 
 data_dir = ''
 run_name = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -46,43 +53,58 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 if not load_model_path:
     load_model_path = "{0}/{1}".format(model_directory, run_name)
 
-data_train = np.load(train_path, allow_pickle=True, fix_imports=True)
-train_examples = data_train[:, 0].tolist()
-train_labels = data_train[:, 1].tolist()
+train_examples = []
+train_labels = []
+
+train_pcs = train_path.split(',')
+for train_set in train_pcs:
+    data_train = np.load(train_set, allow_pickle=True, fix_imports=True)
+    train_examples += data_train[:, 0].tolist()
+    train_labels += data_train[:, 1].tolist()
 
 print("Train dataset balance:")
 print(np.unique(train_labels, return_counts=True))
 
-data_test = np.load(test_path, allow_pickle=True, fix_imports=True)
-test_examples = data_test[:, 0].tolist()
-test_labels = data_test[:, 1].tolist()
+test_examples = []
+test_labels = []
+
+test_pcs = test_path.split(',')
+for test_set in test_pcs:
+    data_test = np.load(test_set, allow_pickle=True, fix_imports=True)
+    test_examples = data_test[:, 0].tolist()
+    test_labels = data_test[:, 1].tolist()
 
 print("Test dataset balance:")
 print(np.unique(test_labels, return_counts=True))
 
-data_eval = np.load(eval_path, allow_pickle=True, fix_imports=True)
-eval_examples = data_eval[:, 0].tolist()
-eval_labels = data_eval[:, 1].tolist()
+# eval_examples = []
+# eval_labels = []
 
-print("Eval dataset balance:")
-print(np.unique(eval_labels, return_counts=True))
+# eval_pcs = eval_path.split(',')
+# for eval_set in eval_pcs:
+#     data_eval = np.load(eval_set, allow_pickle=True, fix_imports=True)
+#     eval_examples += data_eval[:, 0].tolist()
+#     eval_labels += data_eval[:, 1].tolist()
+#
+# print("Eval dataset balance:")
+# print(np.unique(eval_labels, return_counts=True))
 
 
 train_ds = tf.data.Dataset.from_tensor_slices((train_examples, train_labels))
 test_ds = tf.data.Dataset.from_tensor_slices((test_examples, test_labels))
-eval_ds = tf.data.Dataset.from_tensor_slices((eval_examples, eval_labels))
+# eval_ds = tf.data.Dataset.from_tensor_slices((eval_examples, eval_labels))
 
 normalization_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1. / 255)
 train_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
 test_ds = test_ds.map(lambda x, y: (normalization_layer(x), y))
-eval_ds = eval_ds.map(lambda x, y: (normalization_layer(x), y))
+# eval_ds = eval_ds.map(lambda x, y: (normalization_layer(x), y))
 
 train_ds = train_ds.shuffle(len(train_examples))
 train_ds = train_ds.batch(batch_size)
 test_ds = test_ds.shuffle(len(test_examples))
 test_ds = test_ds.batch(batch_size)
-eval_ds = eval_ds.shuffle(len(eval_examples))
-eval_ds = eval_ds.batch(batch_size)
+# eval_ds = eval_ds.shuffle(len(eval_examples))
+# eval_ds = eval_ds.batch(batch_size)
 
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
@@ -110,6 +132,6 @@ model.fit(train_ds, epochs=500,
           shuffle=True, use_multiprocessing=True, validation_data=test_ds)
 
 model.save_weights("{0}/{1}.h5".format(model_directory, run_name))
-model.evaluate(eval_ds, verbose=2)
+# model.evaluate(eval_ds, verbose=2)
 
-eval_model(model, eval_path, run_name)
+# eval_model(model, eval_path, run_name)

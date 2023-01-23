@@ -1,9 +1,0 @@
-tensorflow-gpu==2.8.0
-tensorflow==2.3.0
-librosa==0.9.1
-matplotlib==3.5.1
-numpy
-tqdm~=4.62.3
-keras
-keras-tcn
-audioread

@@ -6,5 +6,10 @@
 
 \processed_data
 \score
+RapidMiner
+
+*.xlsx
 
 *.h5
+
+/images

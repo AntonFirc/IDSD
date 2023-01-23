@@ -4,14 +4,10 @@ from numpy import random
 
 import tensorflow as tf
 import datetime
-from model import build_model, eval_model
+from model import build_model
 import numpy as np
 from sklearn.utils import class_weight
 
-
-# python3 -m tensorboard.main --logdir logs/fit
-
-# python3 train.py -i processed_data/for_rerec_training_vqt.npy,processed_data/for_training_vqt.npy -e processed_data/for_rerec_validation_vqt.npy,processed_data/for_validation_vqt.npy -t processed_data/for_rerec_testing_vqt.npy,processed_data/for_testing_vqt.npy -n WF-cqt
 
 def create_dataset_generator(inputs, labels):
     def argument_free_generator():
@@ -30,6 +26,7 @@ train_path = 'processed_data/for_training_vqt.npy'
 test_path = 'processed_data/for_testing_vqt.npy'
 eval_path = 'processed_data/for_validation_vqt.npy'
 
+# beware! not all options are used and do anything...
 try:
     opts, args = getopt.getopt(sys.argv[1:], "hri:e:t:n:l:m:")
 except getopt.GetoptError:
@@ -131,5 +128,3 @@ model.fit(train_ds, epochs=500,
           steps_per_epoch=len(train_examples) // batch_size)
 
 model.save_weights("{0}/{1}.h5".format(model_directory, run_name))
-
-# eval here
