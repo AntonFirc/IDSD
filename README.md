@@ -18,7 +18,7 @@ Beware! All of the code within this repository is for experimental purposes, thu
 
 ### Project data
 
-All data including trained models available here: TODO
+All data including trained models available here: https://nextcloud.fit.vutbr.cz/s/M6QrWpmatK7fRK3
 
 
 
