@@ -1,7 +1,5 @@
 # Nine simple tricks deepfake detectors don't want you to know
 
-Beware! All of the code within this repository is for experimental purposes, thus it is not guaranteed to run anywhere you want it to.
-
 ### Requirements
 - TensorFlow 2.3.0
 - cuDNN version 7.6
