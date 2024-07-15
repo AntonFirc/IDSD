@@ -2,6 +2,8 @@
 
 Beware! All of the code within this repository is for experimental purposes, thus it is not guaranteed to run anywhere you want it to.
 
+Official implementation of the following paper: Anton Firc, Kamil Malinka, and Petr Hanáček. 2024. Deepfake Speech Detection: A Spectrogram Analysis. In Proceedings of the 39th ACM/SIGAPP Symposium on Applied Computing (SAC '24). Association for Computing Machinery, New York, NY, USA, 1312–1320. https://doi.org/10.1145/3605098.3635911
+
 ### Requirements
 - TensorFlow 2.3.0
 - cuDNN version 7.6
