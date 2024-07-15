@@ -41,7 +41,7 @@ module add cudnn-7.6.4-cuda10.0
 
 source activate IDSD
 
-## Citaction
+## Citation
 ```
 @inproceedings{10.1145/3605098.3635911,
 author = {Firc, Anton and Malinka, Kamil and Han\'{a}\v{c}ek, Petr},
